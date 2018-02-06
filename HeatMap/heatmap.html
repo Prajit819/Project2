@@ -45,7 +45,7 @@ var url = "h1b_sample.csv"
 
 d3.csv(url, function(response){
 
-  console.log(response);
+  // console.log(response);
 
   var heatArray = [];
   var lines = response;
@@ -55,27 +55,23 @@ d3.csv(url, function(response){
 
     if (index["CASE_STATUS"] == "CERTIFIED") {
       var latlon = [index["lat"], index["lon"]];
+      /*change string to number*/
       var latlonnum = latlon.map(Number);
-      console.log(latlonnum)
 
       /*remove NaN*/
-      function filter_array(arr) {
-        var results = [];
-        arr.forEach(function(arr){
-          if(arr){
-            results.push(arr);
+      var latlongi = latlonnum.filter(Number);
 
-          }
-        })
+      if(latlongi.length > 0) {
+
+      // console.log(latlongi)
+
+      heatArray.push(latlongi)
       }
-      console.log(filter_array(latlonnum))
-
-      heatArray.push(filter_array(latlonnum))
     }
   }
 
   var heat = L.heatLayer(heatArray, {
-    radius: 20,
+    radius: 50,
     blur: 35
   }).addTo(myMap)
 
