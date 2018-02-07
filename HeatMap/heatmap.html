@@ -32,59 +32,81 @@
 
 <script type="text/javascript">
 
-var mapbox = 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2V1bmdldW45MiIsImEiOiJjamNzYXR1ZTIwYjhoMndxcXYwbjN3bnAwIn0.C2TZeBKTcofKXWRJnoG53Q'
+var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2V1bmdldW45MiIsImEiOiJjamNzYXR1ZTIwYjhoMndxcXYwbjN3bnAwIn0.C2TZeBKTcofKXWRJnoG53Q');
 
-var myMap = L.map('map', {
-  center: [39.8283, -98.5795],
-  zoom: 5
-});
 
-L.tileLayer(mapbox).addTo(myMap);
+var csv = "h1b_1516_pa.csv"
 
-var url = "h1b_2015_pa.csv"
+d3.csv(csv, function(response){
 
-d3.csv(url, function(response){
-
-  // console.log(response);
-
-  var heatArray = [];
+  var heatArray15 = [];
+  var heatArray16 = [];
   var lines = response;
 
   for (var i = 0; i < lines.length; i++) {
     var index = lines[i];
 
-    if (index["CASE_STATUS"] == "CERTIFIED" || "CERTIFIED-WITHDRAWN" || "WITHDRAWN" || "DENIED") {
-      var latlon = [index["lat"], index["lon"]];
+    if (index["YEAR"] == "2015.0") {
+      var latlon15 = [index["lat"], index["lon"]];
       /*change string to number*/
-      var latlonnum = latlon.map(Number);
-
+      var latlonnum15 = latlon15.map(Number);
       /*remove NaN*/
-      var latlongi = latlonnum.filter(Number);
+      var latlongi15 = latlonnum15.filter(Number);
 
-      if(latlongi.length > 0) {
+      if(latlongi15.length > 0) {
+     /* console.log(latlongi15)*/
+      heatArray15.push(latlongi15)
+      }
+    }
+    else if (index["YEAR"] == "2016.0") {
+      var latlon16 = [index["lat"], index["lon"]];
+      /*change string to number*/
+      var latlonnum16 = latlon16.map(Number);
+      /*remove NaN*/
+      var latlongi16 = latlonnum16.filter(Number);
 
-      /*console.log(latlongi)
-*/
-      heatArray.push(latlongi)
+      if(latlongi16.length > 0) {
+      /*console.log(latlongi16)*/
+      heatArray16.push(latlongi16)
       }
     }
   }
 
-  var heat = L.heatLayer(heatArray, {
-    /*minOpacity: , */
-    radius: 50,
-    blur: 15,
-/*    gradient: {
-            0.0: 'green',
-            0.25: 'yellow',
-            0.5: 'orange',
-            0.75: 'red',
-            1.0: 'purple',
+  var heat15 = L.heatLayer(heatArray15, {
+  radius: 30,
+  blur: 15
+  });
 
-        }*/
-  }).addTo(myMap)
+  console.log(heat15)
 
-  console.log(heat)
+  var heat16 = L.heatLayer(heatArray16, {
+  radius: 30,
+  blur: 15
+  });
+
+  console.log(heat16)
+
+  var baseLayers = {
+      "Mapbox": mapbox
+  };
+  console.log(baseLayers)
+
+  var overlays = {
+      "2015 Heatmap": heat15,
+      "2016 Heatmap": heat16
+  };
+  console.log(overlays)
+
+  var myMap = L.map('map', {
+    center: [39.8283, -98.5795],
+    zoom: 5,
+    layers: [mapbox, heat15, heat16]
+  });
+  console.log(myMap)
+
+  L.control.layers(baseLayers, overlays, {
+    collapsed: false
+  }).addTo(myMap);
 
 });
 
