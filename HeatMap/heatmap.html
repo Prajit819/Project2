@@ -41,7 +41,7 @@ var myMap = L.map('map', {
 
 L.tileLayer(mapbox).addTo(myMap);
 
-var url = "h1b_sample.csv"
+var url = "h1b_2015_pa.csv"
 
 d3.csv(url, function(response){
 
@@ -71,14 +71,17 @@ d3.csv(url, function(response){
   }
 
   var heat = L.heatLayer(heatArray, {
-    minOpacity: 0.1, 
+    /*minOpacity: , */
     radius: 50,
     blur: 15,
-    gradient: {
-            0.0: 'yellow',
-            0.15: 'orange',
-            0.3: 'red'
-        }
+/*    gradient: {
+            0.0: 'green',
+            0.25: 'yellow',
+            0.5: 'orange',
+            0.75: 'red',
+            1.0: 'purple',
+
+        }*/
   }).addTo(myMap)
 
   console.log(heat)

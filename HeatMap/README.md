@@ -1,0 +1,1 @@
+For heatmap_data.ipynb to run correctly, please download the h1b_kaggle.csv file from https://www.kaggle.com/nsharan/h-1b-visa/data 
