@@ -1,0 +1,34 @@
+body {
+  background: #eca1a6;
+}
+
+h1 {
+  font-size: 40px;
+  font: arial;
+  position: absolute;
+  top: 200px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+
+img {
+  width: 80%;
+  height: 80%;
+  position:absolute;
+  top: 200px;
+}
+
+#test {
+  display: inline;
+}
+
+p {
+  text-align: left;
+  position: absolute;
+  top: 360px;
+  left: 800px;
+}
+
