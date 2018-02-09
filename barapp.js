@@ -1,13 +1,13 @@
 // Define SVG area dimensions
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 700;
 
 // Define the chart's margins as an object
 var chartMargin = {
-  top: 30,
-  right: 30,
-  bottom: 30,
-  left: 30
+  top: 100,
+  right: 100,
+  bottom: 250,
+  left: 100
 };
 
 // Define dimensions of the chart area
@@ -42,9 +42,8 @@ d3.csv("graphdata.csv", function(error, employerData) {
 
   // Set the domain of the linear scale to 0 
   yLinearScale.domain([0, d3.max(employerData, function(data) {
-    return data.AverageWage;
+    return Number(data.AverageWage);
   })]);
-
   // Create two new functions passing our scales in as arguments
   // These will be used to create the chart's axes
   
@@ -72,7 +71,16 @@ d3.csv("graphdata.csv", function(error, employerData) {
   // Append two SVG group elements to the SVG area, create the bottom and left axes inside of them
   svg.append("g")
     .call(leftAxis);
+
   svg.append("g")
-    .attr("transform", "translate(0, " + chartHeight + ")")
-    .call(bottomAxis);
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + chartHeight + ")")
+        .call(bottomAxis)
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", function(d) {
+                return "rotate(-45)" 
+                });
 });
