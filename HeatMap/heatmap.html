@@ -34,19 +34,44 @@
 
 var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2V1bmdldW45MiIsImEiOiJjamNzYXR1ZTIwYjhoMndxcXYwbjN3bnAwIn0.C2TZeBKTcofKXWRJnoG53Q');
 
-
-var csv = "h1b_1516_pa.csv"
+/*Data is filtered to "Certified" and "programmer analyst"*/
+var csv = "h1b_data.csv"
 
 d3.csv(csv, function(response){
 
+  var heatArray13 = [];
+  var heatArray14 = [];
   var heatArray15 = [];
-  var heatArray16 = [];
   var lines = response;
 
   for (var i = 0; i < lines.length; i++) {
     var index = lines[i];
 
-    if (index["YEAR"] == "2015.0") {
+    if (index["YEAR"] == "2013.0") {
+      var latlon13 = [index["lat"], index["lon"]];
+      /*change string to number*/
+      var latlonnum13 = latlon13.map(Number);
+      /*remove NaN*/
+      var latlongi13 = latlonnum13.filter(Number);
+
+      if(latlongi13.length > 0) {
+     /* console.log(latlongi15)*/
+      heatArray13.push(latlongi13)
+      }
+    }
+    else if (index["YEAR"] == "2014.0") {
+      var latlon14 = [index["lat"], index["lon"]];
+      /*change string to number*/
+      var latlonnum14 = latlon14.map(Number);
+      /*remove NaN*/
+      var latlongi14 = latlonnum14.filter(Number);
+
+      if(latlongi14.length > 0) {
+      /*console.log(latlongi16)*/
+      heatArray14.push(latlongi14)
+      }
+    }
+    else if (index["YEAR"] == "2015.0") {
       var latlon15 = [index["lat"], index["lon"]];
       /*change string to number*/
       var latlonnum15 = latlon15.map(Number);
@@ -54,37 +79,29 @@ d3.csv(csv, function(response){
       var latlongi15 = latlonnum15.filter(Number);
 
       if(latlongi15.length > 0) {
-     /* console.log(latlongi15)*/
+      /*console.log(latlongi16)*/
       heatArray15.push(latlongi15)
       }
     }
-    else if (index["YEAR"] == "2016.0") {
-      var latlon16 = [index["lat"], index["lon"]];
-      /*change string to number*/
-      var latlonnum16 = latlon16.map(Number);
-      /*remove NaN*/
-      var latlongi16 = latlonnum16.filter(Number);
-
-      if(latlongi16.length > 0) {
-      /*console.log(latlongi16)*/
-      heatArray16.push(latlongi16)
-      }
-    }
   }
+
+  var heat13 = L.heatLayer(heatArray13, {
+  radius: 30,
+  blur: 15
+  });
+
+  /*console.log(heat15)*/
+  var heat14 = L.heatLayer(heatArray14, {
+  radius: 30,
+  blur: 15
+  });
 
   var heat15 = L.heatLayer(heatArray15, {
   radius: 30,
   blur: 15
   });
 
-  console.log(heat15)
-
-  var heat16 = L.heatLayer(heatArray16, {
-  radius: 30,
-  blur: 15
-  });
-
-  console.log(heat16)
+  /*console.log(heat16)*/
 
   var baseLayers = {
       "Mapbox": mapbox
@@ -92,15 +109,16 @@ d3.csv(csv, function(response){
   console.log(baseLayers)
 
   var overlays = {
-      "2015 Heatmap": heat15,
-      "2016 Heatmap": heat16
+      "2013 Heatmap": heat13,
+      "2014 Heatmap": heat14,
+      "2015 Heatmap": heat15
   };
   console.log(overlays)
 
   var myMap = L.map('map', {
     center: [39.8283, -98.5795],
     zoom: 5,
-    layers: [mapbox, heat15, heat16]
+    layers: [mapbox, heat13, heat14, heat15]
   });
   console.log(myMap)
 
